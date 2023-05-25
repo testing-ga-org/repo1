@@ -11,4 +11,4 @@ jobs:
     steps:
       - name: print branch name
         run: |
-          echo "GITHUB_REF: ${GITHUB_REF}"
+          echo "GITHUB_REF: ${GITHUB_REF_NAME}"
