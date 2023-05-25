@@ -14,3 +14,4 @@ jobs:
       - name: print branch name
         run: |
           echo "${GITHUB_BRANCH}"
+          echo ${{toJson(github)}}
