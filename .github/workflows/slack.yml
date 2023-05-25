@@ -1,7 +1,7 @@
 name: branch-name-alert
 
 on:
-  - push
+  - create
 
 jobs:
   docker-steps:
@@ -16,7 +16,7 @@ jobs:
       - name: send a slack Message
         uses: docker://technosophos/slack-notify
         env:
-          SLACK_WEBHOOK: ${{ secrets.DASRE_GITHUB_STANDARDS_SW }}
+          SLACK_WEBHOOK: ${{ secrets.GITHUB_STANDARDS_SW }}
           SLACK_MESSAGE: |
             "The branch ${GITHUB_BRANCH} does not follow the GitHub Branch naming standards for the Datatools Team. This will get deleted in the next 48 hours.
             Please create a branch that follows the naming convention.
