@@ -8,10 +8,7 @@ on:
 jobs:
   stoppr:
     runs-on: ubuntu-latest
-    env: 
-      GITHUB_BRANCH: ${{ github.GITHUB_REF }}
     steps:
       - name: print branch name
         run: |
-          echo "${GITHUB_BRANCH}"
-          echo ${{toJson(github)}}
+          echo ${{toJson(github).ref_name}}
