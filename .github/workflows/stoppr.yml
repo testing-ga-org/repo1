@@ -1,0 +1,12 @@
+name: stop-pull-request
+
+on:
+  - push
+
+jobs:
+  stoppr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: print branch name
+        run: |
+          echo "${{github.GITHUB_REF}}"
