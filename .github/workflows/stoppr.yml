@@ -11,4 +11,4 @@ jobs:
     steps:
       - name: print branch name
         run: |
-          echo ${{toJson(github)}}
+          echo "GITHUB_REF: ${GITHUB_REF}"
