@@ -6,7 +6,9 @@ on:
 jobs:
   stoppr:
     runs-on: ubuntu-latest
+    env: 
+      GITHUB_BRANCH: ${{ github.GITHUB_REF }}
     steps:
       - name: print branch name
         run: |
-          echo "${{github.GITHUB_REF}}"
+          echo "${GITHUB_BRANCH}"
