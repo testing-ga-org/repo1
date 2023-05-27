@@ -1,7 +1,6 @@
 name: stop-pull-request
 
 on:
-  push:
   pull_request:
     types: [opened]
 
