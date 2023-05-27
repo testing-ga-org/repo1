@@ -16,7 +16,7 @@ jobs:
       - name: print
         run: |
           echo "GITHUB_REF_NAME: ${GITHUB_REF_NAME}"
-          echo "${GITHUB_BRANCH}"
+          echo ${GITHUB_BRANCH}
       - name: send a slack Message
         uses: docker://technosophos/slack-notify
         env:
