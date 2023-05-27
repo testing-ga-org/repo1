@@ -16,7 +16,7 @@ jobs:
     steps:
       - name: print
         run: |
-          echo "GITHUB_REF: ${GITHUB_REF}"
+          echo "GITHUB_REF: ${GITHUB_REF_NAME}"
           echo "VARIABLE: ${VARIABLE}"
       - name: send a slack Message
         uses: docker://technosophos/slack-notify
