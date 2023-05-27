@@ -8,16 +8,15 @@ jobs:
     runs-on: ubuntu-latest
     env: 
       GITHUB_CONTEXT: ${{ toJson(github) }}
-      GITHUB_BRANCH: ${{ github.GITHUB_REF }}
-      VARIABLE: "my value"
+      GITHUB_BRANCH: ${GITHUB_REF_NAME}
     if: ${{ !startsWith(github.ref_name, 'DASRE') && !startsWith(github.ref_name, 'test') }}
     container: 
       image: node:20-alpine3.16
     steps:
       - name: print
         run: |
-          echo "GITHUB_REF: ${GITHUB_REF_NAME}"
-          echo "VARIABLE: ${VARIABLE}"
+          echo "GITHUB_REF_NAME: ${GITHUB_REF_NAME}"
+          echo "${GITHUB_BRANCH}"
       - name: send a slack Message
         uses: docker://technosophos/slack-notify
         env:
