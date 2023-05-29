@@ -10,5 +10,4 @@ jobs:
     if: ${{ !startsWith(github.ref_name, 'DASRE') && !startsWith(github.ref_name, 'test') }}
     steps:
       - name: print branch name
-        run: |
-          exit 1
+        run: exit 1
