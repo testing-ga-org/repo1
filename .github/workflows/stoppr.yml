@@ -11,5 +11,4 @@ jobs:
     steps:
       - name: print branch name
         run: |
-          echo "hello world"
           exit 1
