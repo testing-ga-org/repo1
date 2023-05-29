@@ -1,16 +1,15 @@
 name: stop-pull-request
 
 on:
-  push:
   pull_request:
     types: [opened]
 
 jobs:
   stoppr:
     runs-on: ubuntu-latest
-    env: 
-      GITHUB_BRANCH: ${{ github.GITHUB_REF }}
+    if: ${{ !startsWith(github.ref_name, 'DASRE') && !startsWith(github.ref_name, 'test') }}
     steps:
       - name: print branch name
         run: |
-          echo "${GITHUB_BRANCH}"
+          echo "hello world"
+          exit 1
