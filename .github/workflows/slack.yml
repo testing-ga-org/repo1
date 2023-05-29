@@ -1,7 +1,9 @@
 name: branch-name-alert
 
 on:
-  - delete
+  delete:
+  pull_request:
+      types: [opened]
 
 jobs:
   docker-steps:
@@ -13,14 +15,10 @@ jobs:
     container: 
       image: node:20-alpine3.16
     steps:
-      - name: print
-        run: |
-          echo "GITHUB_REF_NAME: ${GITHUB_REF_NAME}"
-          echo ${GITHUB_BRANCH}
       - name: send a slack Message
         uses: docker://technosophos/slack-notify
         env:
-          SLACK_WEBHOOK: ${{ secrets.GA_STANDARDS_PAT }}
+          SLACK_WEBHOOK: ${{ secrets.GA_STANDARDS_SW }}
           SLACK_MESSAGE: |
             "A new branch that does not follow the GitHub Branch naming standards for the Datatools Team has just been created. This will get deleted in the next 48 hours.
             Any PRs from thi branch will be blocked and not allowed to merge.
