@@ -13,7 +13,7 @@ jobs:
       VARIABLE: "my value"
     if: |
       ${{ 
-      !startsWith(github.ref_name, ${{ secrets.GA_STANDARDS_JIRA }}) && 
+      !startsWith(github.ref_name, secrets.GA_STANDARDS_JIRA) && 
       !startsWith(github.ref_name, 'master') && 
       !startsWith(github.ref_name, 'test') 
       }}
