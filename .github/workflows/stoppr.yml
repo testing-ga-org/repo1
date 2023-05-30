@@ -1,8 +1,7 @@
 name: stop-pull-request
 
 on:
-  pull_request:
-    types: [opened]
+  delete
 
 jobs:
   stoppr:
@@ -10,4 +9,4 @@ jobs:
     if: ${{ !startsWith(github.ref_name, 'DASRE') && !startsWith(github.ref_name, 'test') }}
     steps:
       - name: print branch name
-        run: exit 1
+        run: echo "hello world"
