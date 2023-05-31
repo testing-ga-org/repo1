@@ -20,8 +20,11 @@ jobs:
     
     steps:
       - name: send a slack Message
+        shell: python
         run: |
-          echo ${VARIABLE}
+          import os
+          slack_webhook = os.getenv('VARIABLE')
+          print (slack_webhook)
         # uses: docker://technosophos/slack-notify
         # env:
         #   SLACK_WEBHOOK: ${{ secrets.GA_STANDARDS_SW }}
