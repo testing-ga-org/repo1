@@ -1,7 +1,7 @@
 name: branch-name-check
 
 on:
-  delete:
+  push:
   pull_request:
       types: [opened]
 
@@ -13,23 +13,24 @@ jobs:
       VARIABLE: "my value"
     if: |
       ${{ 
-      !startsWith(github.ref_name, 'DASRE-') && 
+      !startsWith(github.ref_name, 'DASRE') && 
       !startsWith(github.ref_name, 'master') && 
       !startsWith(github.ref_name, 'test') 
       }}
-    container: 
-      image: node:20-alpine3.16
+    
     steps:
       - name: send a slack Message
-        uses: docker://technosophos/slack-notify
-        env:
-          SLACK_WEBHOOK: ${{ secrets.GA_STANDARDS_SW }}
-          SLACK_MESSAGE: |
-            A new branch that does not follow the GitHub Branch naming standards for the Datatools Team has just been created. This will get deleted in the next 48 hours.
-            Any PRs from this branch will be blocked and not allowed to merge.
-            Please create a branch that follows the naming convention.
-            Naming convention - The branch name should start with the Jira ID, or it should be one of the whitelisted names.
-            Please find the whitelisted names in Line 1 of ./.github/workflows/cleanup.py file in this repository.
+        run: |
+          echo ${{ secrets.GA_STANDARDS_SW }}
+        # uses: docker://technosophos/slack-notify
+        # env:
+        #   SLACK_WEBHOOK: ${{ secrets.GA_STANDARDS_SW }}
+        #   SLACK_MESSAGE: |
+        #     A new branch that does not follow the GitHub Branch naming standards for the Datatools Team has just been created. This will get deleted in the next 48 hours.
+        #     Any PRs from this branch will be blocked and not allowed to merge.
+        #     Please create a branch that follows the naming convention.
+        #     Naming convention - The branch name should start with the Jira ID, or it should be one of the whitelisted names.
+        #     Please find the whitelisted names in Line 1 of ./.github/workflows/cleanup.py file in this repository.
       - name: stop pull request
         if: github.event_name == 'pull_request'
         run: exit 1
