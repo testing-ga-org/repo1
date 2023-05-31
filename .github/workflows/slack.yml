@@ -21,7 +21,7 @@ jobs:
     steps:
       - name: send a slack Message
         run: |
-          echo VARIABLE
+          echo ${VARIABLE}
         # uses: docker://technosophos/slack-notify
         # env:
         #   SLACK_WEBHOOK: ${{ secrets.GA_STANDARDS_SW }}
