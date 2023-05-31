@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     env: 
       GITHUB_CONTEXT: ${{ toJson(github) }}
-      VARIABLE: "my value"
+      VARIABLE: ${{ secrets.GA_STANDARDS_SW }}
     if: |
       ${{ 
       !startsWith(github.ref_name, 'DASRE') && 
