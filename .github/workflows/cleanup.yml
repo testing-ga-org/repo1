@@ -1,9 +1,9 @@
 name: forty-eight-hour-cleanup
 
 on:
-  delete
-  # schedule:
-  #   - cron: 0 0 1/2 * *
+  delete:
+  schedule:
+    - cron: 0 0 1/2 * *
 
 jobs:
   cleanup:

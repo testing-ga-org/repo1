@@ -2,15 +2,19 @@ name: branch-name-check
 
 on:
   push:
+  create:
   pull_request:
       types: [opened]
+  schedule:
+    - cron: 0 0 1/2 * *
 
 jobs:
   docker-steps:
     runs-on: ubuntu-latest
     env: 
       GITHUB_CONTEXT: ${{ toJson(github) }}
-      VARIABLE: ${{ secrets.GA_STANDARDS_SW }}
+      GITHUB_BRANCH: ${{ github.ref }}
+      SLACK_GROUP: ${{ secrets.GA_STANDARDS_SW }}
     if: |
       ${{ 
       !startsWith(github.ref_name, 'DASRE') && 
@@ -19,11 +23,19 @@ jobs:
       }}
     
     steps:
-      - name: send a slack Message
+      - name: print branch
+        if: github.event_name == 'push'
         shell: python
         run: |
           import os
-          slack_webhook = os.getenv('VARIABLE')
+          branch = os.getenv('GITHUB_BRANCH')
+          print (branch)
+      - name: send a slack Message
+        if: github.event_name == 'create'
+        shell: python
+        run: |
+          import os
+          slack_webhook = os.getenv('SLACK_GROUP')
           print (slack_webhook)
           import requests
           import json
@@ -36,15 +48,70 @@ jobs:
           response = requests.post(slack_webhook, data=json.dumps(payload), headers=headers)
           response.raise_for_status()
           print('Slack message sent successfully!')
-        # uses: docker://technosophos/slack-notify
-        # env:
-        #   SLACK_WEBHOOK: ${{ secrets.GA_STANDARDS_SW }}
-        #   SLACK_MESSAGE: |
-        #     A new branch that does not follow the GitHub Branch naming standards for the Datatools Team has just been created. This will get deleted in the next 48 hours.
-        #     Any PRs from this branch will be blocked and not allowed to merge.
-        #     Please create a branch that follows the naming convention.
-        #     Naming convention - The branch name should start with the Jira ID, or it should be one of the whitelisted names.
-        #     Please find the whitelisted names in Line 1 of ./.github/workflows/cleanup.py file in this repository.
       - name: stop pull request
         if: github.event_name == 'pull_request'
         run: exit 1
+      - uses: actions/checkout@v3
+        if: github.event_name == 'schedule'
+        with:
+          fetch-depth: 0
+          token: ${{secrets.GA_STANDARDS_PAT}}
+      - run: |
+          whitelisted_branches = ["test"]
+          def checkWhitelist(s):
+              for i in whitelisted_branches:
+                  if (i==s):
+                      return False
+              return True
+          
+          def sendSlackMessage(branch):
+              import os
+              slack_webhook = os.getenv('SLACK_GROUP')
+              import requests
+              import json
+              payload = {
+                  'text': 'The '
+              }
+              headers = {
+                  'Content-Type': 'application/json'
+              }
+              response = requests.post(slack_webhook, data=json.dumps(payload), headers=headers)
+              response.raise_for_status()
+
+          import subprocess
+          status, branches = subprocess.getstatusoutput("git branch -r")
+          branches = [y for y in (x.strip() for x in branches.splitlines()) if y]
+          print ("hello world")
+          print (branches)
+
+          arr = []
+          for item in branches:
+              item = item.replace(' ', '')
+              item = item.replace('\n', '')
+              item = item.replace('origin/', '')
+              if ("DASRE-" not in item and item!="master" and checkWhitelist(item)):
+                  arr.append(item)
+          print (arr)
+          status, branches = subprocess.getstatusoutput("git checkout master")
+          for branch in arr:
+              status, commit_id = subprocess.getstatusoutput("git log master..random --oneline | tail -1")
+              print ("this is the commit id = "+commit_id)
+              space_index = commit_id.find(' ')
+              commit_id = commit_id[0:space_index]
+              status, date = subprocess.getstatusoutput("git show -s --format='%ci' "+ commit_id)
+              import datetime
+              now = datetime.datetime.now()
+              space_index = date.find(" +")
+              date = date[0:space_index]
+              year = int(date[0:4])
+              month = int(date[5:7])
+              day = int(date[8:10])
+              hour = int(date[11:13])
+              minute = int(date[14:16])
+              second = int(date[17:19])
+              creation_time = datetime.datetime(year, month, day, hour, minute, second)
+              delta = now - creation_time
+              if (delta.days<24):
+                  test = subprocess.getstatusoutput("git push origin --delete " + branch)
+              
+        shell: python
