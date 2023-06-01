@@ -21,7 +21,7 @@ jobs:
           import json
           import subprocess
           import datetime
-          
+
           status, x = subprocess.getstatusoutput("git checkout master")
 
           file_path = 'whitelist_branches.txt'
@@ -47,7 +47,7 @@ jobs:
               item = item.replace(' ', '')
               item = item.replace('\n', '')
               item = item.replace('origin/', '')
-              if ("DASRE-" not in item and item!="master" and checkWhitelist(item)):
+              if ("DASRE-" not in item and item!="master" and checkWhitelistBranches(item)):
                   arr.append(item)
           print (arr)
           for branch in arr:
