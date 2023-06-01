@@ -56,8 +56,8 @@ jobs:
               import requests
               import json
               payload = {
-                  'text': 'A new branch named ' + branch + ' is created by ' + actor + ' in the ' + repository + ' repository.'
-                          This branch does not follow the GitHub Branch naming standards for the Datatools Team.
+                  'text': 'A new branch named ' + branch + ' is created by ' + actor + ' in the ' + repository + ' repository.'+
+                          'This branch does not follow the GitHub Branch naming standards for the Datatools Team.
                           This will get deleted in the next 48 hours.
                           Any PRs from this branch will be blocked and not allowed to merge.
                           Please delete this and create a branch that follows the naming convention.
