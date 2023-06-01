@@ -2,7 +2,7 @@ name: forty-eight-hour-cleanup
 
 on:
   schedule:
-    - cron: '30 * * * *'
+  - cron: '*/1 * * * *'
 
 jobs:
   cleanup:
