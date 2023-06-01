@@ -21,23 +21,8 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{secrets.GA_STANDARDS_PAT}}
-      - name: print branch
-        if: github.event_name == 'push'
-        shell: python
-        run: |
-          import os
-          branch = os.getenv('GITHUB_BRANCH')
-          repository = os.getenv('GITHUB_REPOSITORY')
-          actor = os.getenv('GITHUB_ACTOR')
-          print (branch)
-          print (repository)
-          print (actor)
-          import subprocess
-          status, branches = subprocess.getstatusoutput("git checkout master")
-          status, files = subprocess.getstatusoutput("ls -a")
-          print (files)
       - name: send a slack Message
-        if: github.event_name == 'push'
+        if: github.event_name == 'create'
         shell: python
         run: |
           import os
@@ -74,9 +59,10 @@ jobs:
               }
               requests.post(slack_webhook, data=json.dumps(payload), headers=headers)
       - name: stop pull request
-        if: github.event_name == 'push'
+        if: github.event_name == 'pull_request'
         shell: python
         run: |
+          import os
           import sys
           import subprocess
 
@@ -89,12 +75,12 @@ jobs:
                       return True
               return False
           
+          branch = os.getenv('GITHUB_BRANCH')
           status, x = subprocess.getstatusoutput("git checkout master")
           
           with open(file_path, 'r') as file:
-          for line in file:
-              b = line.strip()
-              whitelisted_branches.append(b)
-          print (checkWhitelistBranches(branch))
+            for line in file:
+                b = line.strip()
+                whitelisted_branches.append(b)
           if not (checkWhitelistBranches(branch)):
             sys.exit(1)
