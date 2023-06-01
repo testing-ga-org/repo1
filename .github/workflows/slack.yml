@@ -92,9 +92,9 @@ jobs:
           status, x = subprocess.getstatusoutput("git checkout master")
           
           with open(file_path, 'r') as file:
-          for line in file:
-              b = line.strip()
-              whitelisted_branches.append(b)
+            for line in file:
+                b = line.strip()
+                whitelisted_branches.append(b)
           print (checkWhitelistBranches(branch))
           if not (checkWhitelistBranches(branch)):
             sys.exit(1)
