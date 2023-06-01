@@ -45,7 +45,6 @@ jobs:
           import json
           import subprocess
           status, x = subprocess.getstatusoutput("git checkout master")
-          status, y = subprocess.getstatusoutput("ls -a")
 
           file_path = 'whitelist_branches.txt'
           whitelisted_branches = []
@@ -79,6 +78,7 @@ jobs:
         shell: python
         run: |
           import sys
+          import subprocess
 
           file_path = 'whitelist_branches.txt'
           whitelisted_branches = []
@@ -88,6 +88,8 @@ jobs:
                   if (branch==i or branch.startswith(i)):
                       return True
               return False
+          
+          status, x = subprocess.getstatusoutput("git checkout master")
           
           with open(file_path, 'r') as file:
           for line in file:
