@@ -17,6 +17,10 @@ jobs:
       SLACK_GROUP: ${{ secrets.GA_STANDARDS_SW }}
 
     steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: ${{secrets.GA_STANDARDS_PAT}}
       - name: print branch
         if: github.event_name == 'push'
         shell: python
