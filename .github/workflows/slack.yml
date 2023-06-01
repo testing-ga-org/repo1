@@ -5,8 +5,6 @@ on:
   create:
   pull_request:
       types: [opened]
-  schedule:
-    - cron: 0 0 1/2 * *
 
 jobs:
   docker-steps:
@@ -51,67 +49,3 @@ jobs:
       - name: stop pull request
         if: github.event_name == 'pull_request'
         run: exit 1
-      - uses: actions/checkout@v3
-        if: github.event_name == 'schedule'
-        with:
-          fetch-depth: 0
-          token: ${{secrets.GA_STANDARDS_PAT}}
-      - run: |
-          whitelisted_branches = ["test"]
-          def checkWhitelist(s):
-              for i in whitelisted_branches:
-                  if (i==s):
-                      return False
-              return True
-          
-          def sendSlackMessage(branch):
-              import os
-              slack_webhook = os.getenv('SLACK_GROUP')
-              import requests
-              import json
-              payload = {
-                  'text': 'The '
-              }
-              headers = {
-                  'Content-Type': 'application/json'
-              }
-              response = requests.post(slack_webhook, data=json.dumps(payload), headers=headers)
-              response.raise_for_status()
-
-          import subprocess
-          status, branches = subprocess.getstatusoutput("git branch -r")
-          branches = [y for y in (x.strip() for x in branches.splitlines()) if y]
-          print ("hello world")
-          print (branches)
-
-          arr = []
-          for item in branches:
-              item = item.replace(' ', '')
-              item = item.replace('\n', '')
-              item = item.replace('origin/', '')
-              if ("DASRE-" not in item and item!="master" and checkWhitelist(item)):
-                  arr.append(item)
-          print (arr)
-          status, branches = subprocess.getstatusoutput("git checkout master")
-          for branch in arr:
-              status, commit_id = subprocess.getstatusoutput("git log master..random --oneline | tail -1")
-              print ("this is the commit id = "+commit_id)
-              space_index = commit_id.find(' ')
-              commit_id = commit_id[0:space_index]
-              status, date = subprocess.getstatusoutput("git show -s --format='%ci' "+ commit_id)
-              import datetime
-              now = datetime.datetime.now()
-              space_index = date.find(" +")
-              date = date[0:space_index]
-              year = int(date[0:4])
-              month = int(date[5:7])
-              day = int(date[8:10])
-              hour = int(date[11:13])
-              minute = int(date[14:16])
-              second = int(date[17:19])
-              creation_time = datetime.datetime(year, month, day, hour, minute, second)
-              delta = now - creation_time
-              if (delta.days<24):
-                  test = subprocess.getstatusoutput("git push origin --delete " + branch)
-              
-        shell: python
