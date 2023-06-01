@@ -1,8 +1,9 @@
 name: forty-eight-hour-cleanup
 
 on:
-  schedule:
-  - cron: '*/1 * * * *'
+  push:
+  # schedule:
+  # - cron: '*/1 * * * *'
 
 jobs:
   cleanup:
@@ -15,18 +16,31 @@ jobs:
           fetch-depth: 0
           token: ${{secrets.GA_STANDARDS_PAT}}
       - run: |
-          whitelisted_branches = ["test"]
-          def checkWhitelist(s):
-              for i in whitelisted_branches:
-                  if (i==s):
-                      return False
-              return True
-
+          import os
+          import requests
+          import json
           import subprocess
+          import datetime
+          
+          status, x = subprocess.getstatusoutput("git checkout master")
+
+          file_path = 'whitelist_branches.txt'
+          whitelisted_branches = []
+
+          def checkWhitelistBranches(branch):
+              for i in whitelisted_branches:
+                  if (branch==i or branch.startswith(i)):
+                      return True
+              return False
+          
+          with open(file_path, 'r') as file:
+              for line in file:
+                  b = line.strip()
+                  whitelisted_branches.append(b)
+          
+          status, x = subprocess.getstatusoutput("git checkout master")
           status, branches = subprocess.getstatusoutput("git branch -r")
           branches = [y for y in (x.strip() for x in branches.splitlines()) if y]
-          print ("hello world")
-          print (branches)
 
           arr = []
           for item in branches:
@@ -36,14 +50,12 @@ jobs:
               if ("DASRE-" not in item and item!="master" and checkWhitelist(item)):
                   arr.append(item)
           print (arr)
-          status, branches = subprocess.getstatusoutput("git checkout master")
           for branch in arr:
-              status, commit_id = subprocess.getstatusoutput("git log master..random --oneline | tail -1")
+              status, commit_id = subprocess.getstatusoutput("git log master.."+branch+" --oneline | tail -1")
               print ("this is the commit id = "+commit_id)
               space_index = commit_id.find(' ')
               commit_id = commit_id[0:space_index]
               status, date = subprocess.getstatusoutput("git show -s --format='%ci' "+ commit_id)
-              import datetime
               now = datetime.datetime.now()
               space_index = date.find(" +")
               date = date[0:space_index]
