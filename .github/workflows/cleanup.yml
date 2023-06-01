@@ -23,6 +23,8 @@ jobs:
           import datetime
 
           status, x = subprocess.getstatusoutput("git checkout master")
+          status, x = subprocess.getstatusoutput("ls -a")
+          print (x)
 
           file_path = 'whitelist_branches.txt'
           whitelisted_branches = []
@@ -38,7 +40,6 @@ jobs:
                   b = line.strip()
                   whitelisted_branches.append(b)
           
-          status, x = subprocess.getstatusoutput("git checkout master")
           status, branches = subprocess.getstatusoutput("git branch -r")
           branches = [y for y in (x.strip() for x in branches.splitlines()) if y]
 
@@ -47,10 +48,6 @@ jobs:
               item = item.replace(' ', '')
               item = item.replace('\n', '')
               item = item.replace('origin/', '')
-              print ("DASRE-" not in item)
-              print ("master" not in item)
-              print (checkWhitelistBranches(item))
-              print (item)
               if ("DASRE-" not in item and item!="master" and not checkWhitelistBranches(item)):
                   arr.append(item)
           print (arr)
