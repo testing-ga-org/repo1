@@ -1,7 +1,6 @@
 name: forty-eight-hour-cleanup
 
 on:
-  delete:
   schedule:
     - cron: '* * * * *'
 
