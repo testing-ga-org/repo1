@@ -38,7 +38,7 @@ jobs:
           import subprocess
           status, branches = subprocess.getstatusoutput("git checkout master")
 
-          file_path = '../../whitelist_branches.txt'
+          file_path = 'whitelist_branches.txt'
           whitelisted_branches = []
 
           def checkWhitelistBranches(branch):
