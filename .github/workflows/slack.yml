@@ -12,6 +12,7 @@ jobs:
     env: 
       GITHUB_CONTEXT: ${{ toJson(github) }}
       GITHUB_BRANCH: ${{ github.ref }}
+      GITHUB_REPOSITORY: ${{ github.repository }}
       SLACK_GROUP: ${{ secrets.GA_STANDARDS_SW }}
     if: |
       ${{ 
@@ -27,7 +28,9 @@ jobs:
         run: |
           import os
           branch = os.getenv('GITHUB_BRANCH')
+          repository = os.getenv('GITHUB_REPOSITORY')
           print (branch)
+          print (repository)
       - name: send a slack Message
         if: github.event_name == 'create'
         shell: python
