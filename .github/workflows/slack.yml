@@ -38,20 +38,58 @@ jobs:
         if: github.event_name == 'create'
         shell: python
         run: |
+          file_path = 'whitelist_branches.txt'
+          whitelisted_branches = []
+
+          def checkWhitelistBranches(branch):
+              for i in whitelisted_branches:
+                  if (branch==i or branch.startswith(i)):
+                      return True
+              return False
+          
+          with open(file_path, 'r') as file:
+          for line in file:
+              b = line.strip()
+              whitelisted_branches.append(b)
+
           import os
-          slack_webhook = os.getenv('SLACK_GROUP')
-          print (slack_webhook)
-          import requests
-          import json
-          payload = {
-              'text': 'Hello how are you?'
-          }
-          headers = {
-              'Content-Type': 'application/json'
-          }
-          response = requests.post(slack_webhook, data=json.dumps(payload), headers=headers)
-          response.raise_for_status()
-          print('Slack message sent successfully!')
+          branch = os.getenv('GITHUB_BRANCH')
+          repository = os.getenv('GITHUB_REPOSITORY')
+          actor = os.getenv('GITHUB_ACTOR')
+          if not (checkWhitelistBranches(branch)):
+              slack_webhook = os.getenv('SLACK_GROUP')
+              import requests
+              import json
+              payload = {
+                  'text': 'A new branch named ' + branch + ' is created by ' + actor + ' in the ' + repository + ' repository.'
+                          This branch does not follow the GitHub Branch naming standards for the Datatools Team.
+                          This will get deleted in the next 48 hours.
+                          Any PRs from this branch will be blocked and not allowed to merge.
+                          Please delete this and create a branch that follows the naming convention.
+                          Naming convention - The branch name should start with the Jira ID, or it should be one of the whitelisted names.'
+              }
+              headers = {
+                  'Content-Type': 'application/json'
+              }
+              requests.post(slack_webhook, data=json.dumps(payload), headers=headers)
       - name: stop pull request
         if: github.event_name == 'pull_request'
-        run: exit 1
+        shell: python
+        run: |
+          file_path = 'whitelist_branches.txt'
+          whitelisted_branches = []
+
+          def checkWhitelistBranches(branch):
+              for i in whitelisted_branches:
+                  if (branch==i or branch.startswith(i)):
+                      return True
+              return False
+          
+          with open(file_path, 'r') as file:
+          for line in file:
+              b = line.strip()
+              whitelisted_branches.append(b)
+          
+          if not (checkWhitelistBranches(branch)):
+            import sys
+            sys.exit(1)
