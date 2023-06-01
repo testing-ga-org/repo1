@@ -30,7 +30,8 @@ jobs:
           print (actor)
           import subprocess
           status, branches = subprocess.getstatusoutput("git checkout master")
-          status, branches = subprocess.getstatusoutput("ls -a")
+          status, files = subprocess.getstatusoutput("ls -a")
+          print (files)
       - name: send a slack Message
         if: github.event_name == 'push'
         shell: python
@@ -39,8 +40,8 @@ jobs:
           import requests
           import json
           import subprocess
-          status, branches = subprocess.getstatusoutput("git checkout master")
-          status, branches = subprocess.getstatusoutput("ls -a")
+          status, x = subprocess.getstatusoutput("git checkout master")
+          status, y = subprocess.getstatusoutput("ls -a")
 
           file_path = 'whitelist_branches.txt'
           whitelisted_branches = []
