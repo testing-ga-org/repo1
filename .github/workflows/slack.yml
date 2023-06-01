@@ -15,13 +15,7 @@ jobs:
       GITHUB_REPOSITORY: ${{ github.repository }}
       GITHUB_ACTOR: ${{ github.actor }}
       SLACK_GROUP: ${{ secrets.GA_STANDARDS_SW }}
-    if: |
-      ${{ 
-      !startsWith(github.ref_name, 'DASRE') && 
-      !startsWith(github.ref_name, 'master') && 
-      !startsWith(github.ref_name, 'test') 
-      }}
-    
+
     steps:
       - name: print branch
         if: github.event_name == 'push'
@@ -56,6 +50,7 @@ jobs:
           branch = os.getenv('GITHUB_BRANCH')
           repository = os.getenv('GITHUB_REPOSITORY')
           actor = os.getenv('GITHUB_ACTOR')
+          print (checkWhitelistBranches(branch))
           if not (checkWhitelistBranches(branch)):
               slack_webhook = os.getenv('SLACK_GROUP')
               import requests
@@ -89,7 +84,7 @@ jobs:
           for line in file:
               b = line.strip()
               whitelisted_branches.append(b)
-          
+          print (checkWhitelistBranches(branch))
           if not (checkWhitelistBranches(branch)):
             import sys
             sys.exit(1)
