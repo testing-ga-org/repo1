@@ -82,5 +82,6 @@ jobs:
             for line in file:
                 b = line.strip()
                 whitelisted_branches.append(b)
+          
           if not (checkWhitelistBranches(branch)):
             sys.exit(1)
