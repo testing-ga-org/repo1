@@ -46,9 +46,9 @@ jobs:
               return False
           
           with open(file_path, 'r') as file:
-          for line in file:
-              b = line.strip()
-              whitelisted_branches.append(b)
+              for line in file:
+                  b = line.strip()
+                  whitelisted_branches.append(b)
 
           branch = os.getenv('GITHUB_BRANCH')
           repository = os.getenv('GITHUB_REPOSITORY')
