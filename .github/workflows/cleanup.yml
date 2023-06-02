@@ -22,7 +22,7 @@ jobs:
           import subprocess
           import datetime
 
-          status, x = subprocess.getstatusoutput("git checkout random")
+          status, x = subprocess.getstatusoutput("git checkout master")
           status, x = subprocess.getstatusoutput("ls -a")
           print (x)
           status, x = subprocess.getstatusoutput("git branch -a")
@@ -58,6 +58,7 @@ jobs:
           arr = arr[1:]
           print (arr)
           for branch in arr:
+              status, x = subprocess.getstatusoutput("git checkout "+branch)
               status, commit_id = subprocess.getstatusoutput("git log master.."+branch+" --oneline | tail -1")
               print ("this is the commit id = "+commit_id)
               space_index = commit_id.find(' ')
