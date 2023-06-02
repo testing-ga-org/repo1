@@ -25,6 +25,8 @@ jobs:
           status, x = subprocess.getstatusoutput("git checkout master")
           status, x = subprocess.getstatusoutput("ls -a")
           print (x)
+          status, x = subprocess.getstatusoutput("git branch -a")
+          print (x)
 
           file_path = 'whitelist_branches.txt'
           whitelisted_branches = []
