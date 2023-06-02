@@ -55,6 +55,7 @@ jobs:
               item = item.replace('origin/', '')
               if not (checkWhitelistBranches(item)):
                   arr.append(item)
+          arr = arr[1:]
           print (arr)
           for branch in arr:
               status, commit_id = subprocess.getstatusoutput("git log master.."+branch+" --oneline | tail -1")
