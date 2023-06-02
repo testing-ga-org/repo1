@@ -27,6 +27,9 @@ jobs:
           print (x)
           status, x = subprocess.getstatusoutput("git branch -a")
           print (x)
+          status, x = subprocess.getstatusoutput("git symbolic-ref refs/remotes/origin/HEAD refs/remotes/origin/master")
+          status, x = subprocess.getstatusoutput("git branch -a")
+          print (x)
 
           file_path = 'whitelist_branches.txt'
           whitelisted_branches = []
