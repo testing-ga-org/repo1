@@ -48,7 +48,7 @@ jobs:
               item = item.replace(' ', '')
               item = item.replace('\n', '')
               item = item.replace('origin/', '')
-              if ("DASRE-" not in item and item!="master" and not checkWhitelistBranches(item)):
+              if not (checkWhitelistBranches(item)):
                   arr.append(item)
           print (arr)
           for branch in arr:
