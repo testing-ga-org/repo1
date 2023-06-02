@@ -22,7 +22,7 @@ jobs:
           import subprocess
           import datetime
 
-          status, x = subprocess.getstatusoutput("git checkout master")
+          status, x = subprocess.getstatusoutput("git checkout random")
           status, x = subprocess.getstatusoutput("ls -a")
           print (x)
           status, x = subprocess.getstatusoutput("git branch -a")
